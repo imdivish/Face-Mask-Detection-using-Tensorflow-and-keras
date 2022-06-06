@@ -1,0 +1,199 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+	<title>M-GAP | Register</title>
+	<link rel="icon" type="image/png" href="/assets/images/favicon.png" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<noscript>
+		<link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"
+		integrity="sha512-dQIiHSl2hr3NWKKLycPndtpbh5iaHLo6MwrXm7F0FM5e+kL2U16oE9uIwPHUl6fQBeCthiEuV/rzP3MiAB8Vfw=="
+		crossorigin="anonymous"></script>
+</head>
+
+<body class="is-preload">
+
+	<!-- Page Wrapper -->
+	<div id="page-wrapper">
+
+		<!-- Header -->
+		<header id="header">
+			<h1><a href="index.html">M-GAP</a></h1>
+			<nav>
+				<a href="#menu">MENU</a>
+			</nav>
+		</header>
+
+		<!-- Menu -->
+		<nav id="menu">
+			<div class="inner">
+				<h2>Menu</h2>
+				<ul class="links">
+					<li><a href="/">Home</a></li>
+					<li><a href="/register">Register</a></li>
+					<li><a href="/verify">Verify</a></li>
+				</ul>
+				<a href="#" class="close">Close</a>
+			</div>
+		</nav>
+
+		<!-- Wrapper -->
+		<section id="wrapper">
+			<header>
+				<div class="inner">
+					<h2>REGISTER</h2>
+					<section>
+						<h3 class="major">Fill the details to register : </h3>
+						<form method="post" class='registerform' action="/send_details">
+							<div class="row gtr-uniform">
+								<div class="col-6 col-12-xsmall">
+									<label for="demo-name">Name</label>
+									<input type="text" name="demo-name" id="demo-name" value="" required />
+								</div>
+								<div class="col-6 col-12-xsmall">
+									<label for="demo-age">Age</label>
+									<input type="text" name="demo-age" id="demo-email" value="" required />
+								</div>
+								<div class="col-12">
+									<label for="demo-gender">Gender</label>
+									<select name="demo-gender" id="demo-gender" required>
+										<option value="">-</option>
+										<option value="Male">Male</option>
+										<option value="Female">Female</option>
+										<option value="Other">Other</option>
+									</select>
+								</div>
+								<div class="col-6 col-12-xsmall">
+									<label for="demo-email">Email</label>
+									<input type="email" name="demo-email" id="demo-email" value="" required />
+								</div>
+								<div class="col-6 col-12-xsmall">
+									<label for="demo-name">Contact</label>
+									<input type="text" name="demo-contact" id="demo-email" value="" required />
+								</div>
+
+								<div id="system"></div>
+							</div>
+
+					</section>
+				</div>
+			</header>
+		</section>
+
+		<!-- Content -->
+
+		<div id="system" class="wrapper">
+			<div class="inner">
+
+				<section class="features">
+
+					<div class="row">
+						<div id="container">
+							<div class="col-6 col-12-large" id="mycamera" class="image main"></div>
+							<div class="col-6 col-12-large">
+								<p id="register_error"></p>
+							</div>
+						</div>
+						<input type="hidden" name="encoding" id="encoding">
+						<input type="hidden" name="register_image" id="register_image">
+						<script language="JavaScript">
+							Webcam.set({
+								width: 600,
+								height: 400,
+								image_format: 'jpeg',
+								jpeg_quality: 90
+							});
+							Webcam.attach('#mycamera');
+						</script>
+
+						<div class="col-6 col-12-large">
+							<ul class="actions stacked">
+								<li><a href="#" input type="button" id="hello" class="button primary fit"
+										onClick="take_snapshot()">Take Snapshot</a></li>
+								<li><input type="button" value="Retake Snapshot" id="hello" class="button primary fit"
+										onClick="retake()"></li>
+
+							</ul>
+						</div>
+
+						<div id="results"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+
+		<style>
+			#hello {
+				margin-left: 70px;
+
+			}
+		</style>
+		<!-- A button for taking snaps -->
+		<script language="JavaScript">
+			Webcam.on('error', function (err) {
+				console.log(err)
+			});
+			function take_snapshot() {
+
+
+				// take snapshot and get image data
+				Webcam.snap(function (data_uri) {
+					// display results in page
+
+					document.getElementById('mycamera').innerHTML =
+						'<img src="' + data_uri + '"/>';
+
+					Webcam.upload(data_uri, '/register-image', function (code, text) {
+						console.log('Save successfully');
+						document.getElementById("encoding").value = text;
+						if (JSON.parse(text).length === 0) {
+							var error = "Error registering your face. Please try again by clicking on retake snapshot";
+							document.getElementById("register_error").innerHTML = error;
+						}
+						document.getElementById("register_image").value = data_uri;
+
+						console.log(text);
+					});
+				});
+
+			}
+			function retake() {
+				Webcam.reset( '#mycamera' );
+				Webcam.attach( '#mycamera' );
+			}
+
+
+		</script>
+		<!-- Footer -->
+		<section id="footer">
+			<div class="inner" class='registerform'>
+				<div class="col-12">
+
+					<ul class="actions">
+						<li><input type="submit" value="REGISTER" class="primary" /></li>
+						<li><input type="reset" value="Reset" /></li>
+					</ul>
+
+				</div>
+
+			</div>
+
+		</section>
+		</form>
+	</div>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

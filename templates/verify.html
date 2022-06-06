@@ -1,0 +1,182 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+	<title>M-GAP | Verify</title>
+	<link rel="icon" type="image/png" href="/assets/images/favicon.png"/>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<noscript>
+		<link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"
+		integrity="sha512-dQIiHSl2hr3NWKKLycPndtpbh5iaHLo6MwrXm7F0FM5e+kL2U16oE9uIwPHUl6fQBeCthiEuV/rzP3MiAB8Vfw=="
+		crossorigin="anonymous"></script>
+</head>
+
+<body class="is-preload">
+
+	<!-- Page Wrapper -->
+	<div id="page-wrapper">
+
+		<!-- Header -->
+		<header id="header">
+			<h1><a href="/">M-GAP</a></h1>
+			<nav>
+				<a href="#menu">MENU</a>
+			</nav>
+		</header>
+
+		<!-- Menu -->
+		<nav id="menu">
+			<div class="inner">
+				<h2>Menu</h2>
+				<ul class="links">
+					<li><a href="/">Home</a></li>
+					<li><a href="/register">Register</a></li>
+					<li><a href="/verify">Verify</a></li>
+
+				</ul>
+				<a href="#" class="close">Close</a>
+			</div>
+		</nav>
+
+		<!-- Wrapper -->
+		<section id="wrapper">
+			<header>
+				<div class="inner">
+					<h2>VERIFY</h2>
+					<section>
+						<h3 class="major">Fill the details to verify : </h3>
+						<form method="post" action="/verification_details">
+							<div class="row gtr-uniform">
+								<div class="col-12">
+									<label for="demo-temp">Temperature in Fahrenheit</label>
+									<input type="text" name="demo-temp" id="demo-name" value="" required />
+									<input type="hidden" name='user-id' id='user-id' />
+									<input type="hidden" name='mask-detected' id='mask-detected' />
+								</div>
+
+							</div>
+
+					</section>
+				</div>
+			</header>
+
+			<!-- Content -->
+			<div class="wrapper">
+				<div class="inner">
+
+					<section class="features">
+
+						<div class="row">
+							<div id="mycamera" class="image main"></div>
+							<script language="JavaScript">
+								Webcam.set({
+									width: 600,
+									height: 400,
+									image_format: 'jpeg',
+									jpeg_quality: 90
+								});
+								Webcam.attach('#mycamera');
+							</script>
+
+							<div class="col-6 col-12-large">
+								<ul class="actions stacked">
+									<li><a href="#" input type="button" id="hello1" class="button primary fit"
+											onClick="take_snapshot()">Verify Identity</a></li>
+
+								</ul>
+
+							</div>
+							<div id="mask" class="image main"></div>
+							<script language="JavaScript">
+								Webcam.set({
+									width: 600,
+									height: 400,
+									image_format: 'jpeg',
+									jpeg_quality: 90
+								});
+								Webcam.attach('#mask');
+							</script>
+
+							<div class="col-6 col-12-large">
+								<ul class="actions stacked">
+									<li><a href="#" input type="button" id="hello1" class="button primary fit"
+											onClick="detect_mask()">Verify Mask</a></li>
+
+								</ul>
+
+							</div>
+						</div>
+					</section>
+
+				</div>
+			</div>
+
+		</section>
+		<style>
+			#hello1 {
+				margin-left: 70px;
+
+			}
+		</style>
+
+		<!-- A button for taking snaps -->
+		<script language="JavaScript">
+			Webcam.on('error', function (err) {
+				console.log(err)
+			});
+			function take_snapshot() {
+				// take snapshot and get image data
+				Webcam.snap(function (data_uri) {
+					// snap complete, image data is in 'data_uri'
+					document.getElementById('mycamera').innerHTML =
+					'<img src="' + data_uri + '"/>';
+					Webcam.upload(data_uri, '/verify-face', function (code, text) {
+						console.log('Face image sent successfully');
+						console.log(JSON.parse(text).user_id);
+						document.getElementById('user-id').value = JSON.parse(text).user_id;
+						
+					});
+				});
+			}
+			function detect_mask() {
+				// take snapshot and get image data
+				Webcam.snap(function (data_uri) {
+					// snap complete, image data is in 'data_uri'
+					document.getElementById('mask').innerHTML =
+					'<img src="' + data_uri + '"/>';
+					Webcam.upload(data_uri, '/verify-mask', function (code, text) {
+						console.log('Mask image sent successfully');
+						document.getElementById('mask-detected').value = JSON.parse(text).mask
+					});
+				});
+			}
+		</script>
+		<!-- Footer -->
+		<section id="footer">
+			<div class="inner">
+				<div class="col-12">
+					<ul class="actions">
+						<li><input type="submit" value="Verify" class="primary" /></li>
+						<li><input type="reset" value="Reset" /></li>
+					</ul>
+				</div>
+			</div>
+		</section>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
